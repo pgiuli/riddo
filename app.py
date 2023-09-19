@@ -1,5 +1,4 @@
-import os
-import sys
+from urllib.parse import parse_qs
 
 redirs = {
     'blog':'https://blog.giuli.cat',
@@ -7,8 +6,15 @@ redirs = {
     'instagram':'https://instagram.com/pxxgl'
           }
 
-sys.path.insert(0, os.path.dirname(__file__))
 
+def parse_query_parameters(query_string):
+    # Use parse_qs to parse the query string into a dictionary
+    parameters_dict = parse_qs(query_string)
+
+    return parameters_dict
+
+#WIP: redirect managing
+#def add_redir()
 
 def app(environ, start_response):
 
@@ -17,8 +23,8 @@ def app(environ, start_response):
     site = redirs.get(path)
     #print(f'Site is {site}')
 
-    query = environ['QUERY_STRING']
-    print(query)
+    params = parse_query_parameters(environ['QUERY_STRING'])
+    print(params)
 
     if site != None:
         start_response('302 Found', [('Location', site)])
