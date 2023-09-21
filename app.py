@@ -1,11 +1,6 @@
 from urllib.parse import parse_qs
 
-redirs = {
-    'blog':'https://blog.giuli.cat',
-    'github':'https://github.com/pgiuli',
-    'instagram':'https://instagram.com/pxxgl'
-          }
-
+import db
 
 def parse_query_parameters(query_string):
     # Use parse_qs to parse the query string into a dictionary
@@ -13,14 +8,17 @@ def parse_query_parameters(query_string):
 
     return parameters_dict
 
-#WIP: redirect managing
-#def add_redir()
 
 def app(environ, start_response):
 
-    path = environ['PATH_INFO'][1:] #The [1:] removes the '/' from the string 
+    path = environ['PATH_INFO']
+
+    #This only keeps what's between the first "dir" eg. /test/asd will return test
+    parts = path.split('/')
+    resource = parts[1]
+
     #print(f'Path is {path}')
-    site = redirs.get(path)
+    site = db.retrieve_url(resource)
     #print(f'Site is {site}')
 
     params = parse_query_parameters(environ['QUERY_STRING'])
